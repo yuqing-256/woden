@@ -1,0 +1,7 @@
+[tools]
+go = "1.27.3"
+odin = { version = "dev-2026-10", bin_path = "." }
+ols = { version = "dev-2026-10", rename_exe = { "ols-*" = "ols", "odinfmt-*" = "odinfmt" } }
+
+[tasks.build]
+run = "go build -o bin ."

@@ -1,0 +1,52 @@
+{
+  // ── 核心：以 gopls 为唯一语言智能核心 ──────────────────────────
+  "go.useLanguageServer": true,
+
+  "[go]": {
+    // 存在多个可格式化 Go 的扩展时，锁定官方扩展（官方 FAQ 排查项）
+    "editor.defaultFormatter": "golang.go",
+
+    // 现代 VS Code 代码操作 API 要求用 "explicit" 而非旧的 true
+    // Go 扩展默认已开启导入整理，此处显式确认以避免被用户级设置覆盖
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "explicit"
+    },
+
+    // 避免片段建议干扰 gopls 语义补全的排名（gopls 官方文档保留项）
+    "editor.snippetSuggestions": "none"
+
+    // 【按需启用】保存时格式化。Go 扩展默认已开启，通常无需写。
+    // 仅当你的用户级设置误关、或想在工作区强制锁定时取消注释：
+    // "editor.formatOnSave": true
+  },
+
+  "gopls": {
+    // 语义高亮：VS Code 官方 Go 文档与扩展 FAQ 均明确推荐，
+    // 对泛型等现代特性的着色远优于默认 TextMate 高亮
+    "ui.semanticTokens": true,
+
+    // 补全函数时自动填入参数占位符（gopls 官方设置文档标准项）
+    "usePlaceholders": true,
+
+    "hints": {
+      // 内联提示全部默认关闭，需显式开启。以下两项实用价值最高、视觉负担最低：
+      "parameterNames": true, // 函数调用显示参数名，读陌生代码极有帮助
+      "rangeVariableTypes": true // range 循环变量类型一目了然
+
+      // 【按需启用】以下提示在多数项目中易造成视觉噪音，按项目情况开启：
+      // "assignVariableTypes": true,       // 赋值语句显示推断类型
+      // "constantValues": true,            // 常量显示计算后的值
+      // "functionTypeParameters": true,    // 泛型调用显示推断的类型参数（重度泛型项目）
+      // "compositeLiteralFields": true     // 复合字面量显示字段名（配置字面量密集时）
+    }
+
+    // 【按需关闭】gopls 默认已启用 staticcheck 的精选子集（未设置时约半数以上分析器生效）。
+    // 大型项目中若因 staticcheck 分析导致卡顿，可取消注释关闭全部 staticcheck 分析器：
+    // "staticcheck": false
+  }
+
+  // 【按需启用】统一 linter 入口。需要 errcheck（抓未处理 error）等检查时启用，
+  // 需额外安装 golangci-lint 二进制，建议项目根目录配 .golangci.yml：
+  // "go.lintTool": "golangci-lint",
+  // "go.lintOnSave": "package"
+}
