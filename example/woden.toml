@@ -1,0 +1,7 @@
+[package]
+name = "woden-example"
+version = "0.1.0"
+
+[collections]
+app = "src"
+libs = "libs"
