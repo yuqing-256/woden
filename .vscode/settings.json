@@ -43,10 +43,16 @@
     // 【按需关闭】gopls 默认已启用 staticcheck 的精选子集（未设置时约半数以上分析器生效）。
     // 大型项目中若因 staticcheck 分析导致卡顿，可取消注释关闭全部 staticcheck 分析器：
     // "staticcheck": false
-  }
+  },
 
   // 【按需启用】统一 linter 入口。需要 errcheck（抓未处理 error）等检查时启用，
   // 需额外安装 golangci-lint 二进制，建议项目根目录配 .golangci.yml：
   // "go.lintTool": "golangci-lint",
   // "go.lintOnSave": "package"
+
+  // Addtional
+  "files.eol": "\n",
+  "files.associations": {
+    "**/testdata/**": "plaintext"
+  }
 }
