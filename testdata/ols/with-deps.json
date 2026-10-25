@@ -1,0 +1,10 @@
+{
+  "$schema": "https://raw.githubusercontent.com/DanielGavin/ols/master/misc/ols.schema.json",
+  "collections": [
+    { "name": "app", "path": "src" },
+    { "name": "deps", "path": "vendor" }
+  ],
+  "checker_args": "-vet",
+  "profile": "default",
+  "profiles": [{ "name": "default", "checker_path": ["src", "tests"] }]
+}

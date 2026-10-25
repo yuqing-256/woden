@@ -1,0 +1,24 @@
+version = 1
+
+[[package]]
+name = "alpha"
+git = "https://github.com/example/alpha.git"
+branch = "main"
+commit = "0123456789abcdef0123456789abcdef01234567"
+
+[[package]]
+name = "beta"
+git = "https://github.com/example/beta.git"
+tag = "v1.0.0"
+commit = "89abcdef0123456789abcdef0123456789abcdef"
+
+[[package]]
+name = "delta"
+git = "https://github.com/example/delta.git"
+rev = "fedcba9"
+commit = "fedcba9876543210fedcba9876543210fedcba98"
+
+[[package]]
+name = "gamma"
+git = "https://github.com/example/gamma.git"
+commit = "1111111111111111111111111111111111111111"

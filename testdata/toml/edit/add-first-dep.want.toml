@@ -1,0 +1,11 @@
+[package]
+name = "my-game"  # keep this comment
+version = "0.1.0"
+
+[collections]
+app = "src"
+deps = "vendor"
+
+[dependencies.example-library]
+git = "https://github.com/example/example-library.git"
+branch = "main"

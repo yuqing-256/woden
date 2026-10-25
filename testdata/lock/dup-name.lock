@@ -1,0 +1,13 @@
+version = 1
+
+[[package]]
+name = "alpha"
+git = "https://github.com/example/alpha.git"
+branch = "main"
+commit = "0123456789abcdef0123456789abcdef01234567"
+
+[[package]]
+name = "alpha"
+git = "https://github.com/example/beta.git"
+tag = "v1.0.0"
+commit = "89abcdef0123456789abcdef0123456789abcdef"

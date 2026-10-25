@@ -1,0 +1,12 @@
+[package]
+name = "my-game"  # keep this comment
+version = "0.1.0"
+
+[collections]
+app = "src"
+deps = "vendor"
+
+# second dependency
+[dependencies.beta]
+git = "https://github.com/example/beta.git"
+tag = "v1.0.0"                              # pinned

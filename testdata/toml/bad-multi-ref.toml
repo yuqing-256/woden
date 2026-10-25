@@ -1,0 +1,8 @@
+[package]
+name = "my-game"
+version = "0.1.0"
+
+[dependencies.alpha]
+git = "https://github.com/example/alpha.git"
+branch = "main"
+tag = "v1.0.0"

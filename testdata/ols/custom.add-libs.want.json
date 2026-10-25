@@ -1,0 +1,15 @@
+{
+  "$schema": "https://raw.githubusercontent.com/DanielGavin/ols/master/misc/ols.schema.json",
+  "collections": [
+    { "name": "app", "path": "src" },
+    { "name": "ols-only", "path": "/opt/ols-only" },
+    { "name": "libs", "path": "libs" }
+  ],
+  "checker_args": "-vet -strict-style",
+  "enable_document_symbols": true,
+  "profile": "default",
+  "profiles": [
+    { "name": "default", "checker_path": ["src", "tests"] },
+    { "name": "extra", "checker_path": ["libs"] }
+  ]
+}

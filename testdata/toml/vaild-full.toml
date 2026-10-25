@@ -1,0 +1,29 @@
+[package]
+name = "my-game"
+version = "0.1.0"
+
+[collections]
+app = "src"
+libs = "libs"
+deps = "vendor"
+
+[profile.dev]
+opt-level = "none"
+
+[profile.release]
+debug = true
+
+[dependencies.alpha]
+git = "https://github.com/example/alpha.git"
+branch = "main"
+
+[dependencies.beta]
+git = "https://github.com/example/beta.git"
+tag = "v1.0.0"
+
+[dependencies.gamma]
+git = "https://github.com/example/gamma.git"
+rev = "0123456789abcdef0123456789abcdef01234567"
+
+[dependencies.delta]
+git = "https://github.com/example/delta.git"
