@@ -1,40 +1,46 @@
 /*
 Copyright © 2026 NAME HERE <EMAIL ADDRESS>
-
 */
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/spf13/cobra"
 )
 
-// updateCmd represents the update command
+// updateCmd advances the dependencies that track a moving reference.
 var updateCmd = &cobra.Command{
-	Use:   "update",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
+	Use:   "update [NAME...]",
+	Short: "Update Git dependencies to their remote commits",
+	Long: `Advance the Git dependencies that track a branch, a tag or the remote default
+branch to the commit the remote resolves to now, and restore missing vendor
+worktrees at the new commit.
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("update called")
+Without NAME every dependency that is not pinned to a revision is updated.
+Dependencies pinned with --rev are never advanced automatically: they are
+reported as skipped, and naming one explicitly is an error.
+
+A vendor worktree with local modifications is never overwritten; it is reported
+as skipped, the remaining dependencies are still processed, and the command
+fails at the end.`,
+	Example: `  woden update
+  woden update odin-json`,
+	Args:    cobra.ArbitraryArgs,
+	GroupID: GroupDependency,
+	// Completion runs before PersistentPreRunE loads the project.
+	ValidArgsFunction: completeDependencyNames,
+	RunE: func(cmd *cobra.Command, args []string) error {
+		p, err := projectFromCommand(cmd)
+		if err != nil {
+			return err
+		}
+		deps, err := newGitDeps(cmd, p)
+		if err != nil {
+			return err
+		}
+		return deps.Update(commandContext(cmd), args)
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(updateCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// updateCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// updateCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }

@@ -1,40 +1,44 @@
 /*
 Copyright © 2026 NAME HERE <EMAIL ADDRESS>
-
 */
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/spf13/cobra"
 )
 
-// removeCmd represents the remove command
+// removeCmd removes a Git dependency.
 var removeCmd = &cobra.Command{
-	Use:   "remove",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
+	Use:   "remove NAME",
+	Short: "Remove a Git dependency",
+	Long: `Remove the Git dependency NAME from woden.toml, woden.lock and vendor/.
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("remove called")
+The vendor worktree is only removed when it is safe: it must be a Git worktree
+whose origin URL is the declared git URL, it must have no local modifications
+and it must be checked out at the commit woden.lock pins. Otherwise the command
+refuses and leaves everything untouched, so local work is never destroyed.
+
+Removing the last dependency also removes the deps collection mapping from
+woden.toml and the then empty vendor/ directory, and drops the deps entry from
+ols.json.`,
+	Example: `  woden remove odin-json`,
+	Args:    cobra.ExactArgs(1),
+	GroupID: GroupDependency,
+	// Completion runs before PersistentPreRunE loads the project.
+	ValidArgsFunction: completeDependencyNames,
+	RunE: func(cmd *cobra.Command, args []string) error {
+		p, err := projectFromCommand(cmd)
+		if err != nil {
+			return err
+		}
+		deps, err := newGitDeps(cmd, p)
+		if err != nil {
+			return err
+		}
+		return deps.Remove(commandContext(cmd), args[0])
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(removeCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// removeCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// removeCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
