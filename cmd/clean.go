@@ -5,7 +5,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"woden/internal/clean"
+	"github.com/yuqing-256/woden/internal/clean"
 )
 
 // cleanCmd removes the project's target directory.

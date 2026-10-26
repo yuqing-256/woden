@@ -12,7 +12,7 @@ import (
 	"runtime"
 	"strings"
 
-	"woden/internal/errs"
+	"github.com/yuqing-256/woden/internal/errs"
 )
 
 // AbsClean returns the absolute, cleaned form of path.

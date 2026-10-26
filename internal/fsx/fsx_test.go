@@ -7,8 +7,8 @@ import (
 	"strings"
 	"testing"
 
-	"woden/internal/errs"
-	"woden/internal/fsx"
+	"github.com/yuqing-256/woden/internal/errs"
+	"github.com/yuqing-256/woden/internal/fsx"
 )
 
 func TestAbsClean(t *testing.T) {

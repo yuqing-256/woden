@@ -6,11 +6,11 @@ import (
 	"os"
 	"strings"
 
-	"woden/internal/config"
-	"woden/internal/errs"
-	"woden/internal/lock"
-	"woden/internal/project"
-	"woden/internal/validate"
+	"github.com/yuqing-256/woden/internal/config"
+	"github.com/yuqing-256/woden/internal/errs"
+	"github.com/yuqing-256/woden/internal/lock"
+	"github.com/yuqing-256/woden/internal/project"
+	"github.com/yuqing-256/woden/internal/validate"
 )
 
 // AddOptions carries the flags of "woden add".

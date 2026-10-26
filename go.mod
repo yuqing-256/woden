@@ -1,4 +1,4 @@
-module woden
+module github.com/yuqing-256/woden
 
 go 1.27.2
 

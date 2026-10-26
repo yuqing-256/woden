@@ -5,6 +5,7 @@ import (
 	"context"
 	"os"
 	"path/filepath"
+	"runtime/debug"
 	"strings"
 	"testing"
 )
@@ -63,6 +64,19 @@ func TestRootVersion(t *testing.T) {
 	}
 	if !strings.Contains(out, "dev") {
 		t.Errorf("version output %q does not contain the version", out)
+	}
+}
+
+func TestVersionFromBuildInfo(t *testing.T) {
+	info := &debug.BuildInfo{Main: debug.Module{Version: "v1.2.3"}}
+	if got := versionFromBuildInfo("dev", info); got != "v1.2.3" {
+		t.Fatalf("versionFromBuildInfo(dev, module v1.2.3) = %q, want %q", got, "v1.2.3")
+	}
+	if got := versionFromBuildInfo("v2.0.0", info); got != "v2.0.0" {
+		t.Fatalf("versionFromBuildInfo(linker override) = %q, want %q", got, "v2.0.0")
+	}
+	if got := versionFromBuildInfo("dev", &debug.BuildInfo{Main: debug.Module{Version: "(devel)"}}); got != "dev" {
+		t.Fatalf("versionFromBuildInfo(devel) = %q, want %q", got, "dev")
 	}
 }
 

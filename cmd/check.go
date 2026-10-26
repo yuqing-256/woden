@@ -6,9 +6,9 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"woden/internal/odin"
-	"woden/internal/proc"
-	"woden/internal/project"
+	"github.com/yuqing-256/woden/internal/odin"
+	"github.com/yuqing-256/woden/internal/proc"
+	"github.com/yuqing-256/woden/internal/project"
 )
 
 // odinToolTimeout bounds every odinfmt and odin invocation. The tools have no

@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"woden/internal/errs"
+	"github.com/yuqing-256/woden/internal/errs"
 )
 
 func TestUserf(t *testing.T) {

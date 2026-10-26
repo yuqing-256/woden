@@ -14,7 +14,7 @@ import (
 	"os/exec"
 	"time"
 
-	"woden/internal/errs"
+	"github.com/yuqing-256/woden/internal/errs"
 )
 
 // Options configures one external command.

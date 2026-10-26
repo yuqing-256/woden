@@ -9,7 +9,7 @@ import (
 	"strings"
 	"testing"
 
-	"woden/internal/testutil"
+	"github.com/yuqing-256/woden/internal/testutil"
 )
 
 func gitIn(t *testing.T, dir string, args ...string) string {

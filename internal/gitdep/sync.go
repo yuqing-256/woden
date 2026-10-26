@@ -7,12 +7,12 @@ import (
 	"io/fs"
 	"os"
 
-	"woden/internal/config"
-	"woden/internal/errs"
-	"woden/internal/lock"
-	"woden/internal/ols"
-	"woden/internal/project"
-	"woden/internal/validate"
+	"github.com/yuqing-256/woden/internal/config"
+	"github.com/yuqing-256/woden/internal/errs"
+	"github.com/yuqing-256/woden/internal/lock"
+	"github.com/yuqing-256/woden/internal/ols"
+	"github.com/yuqing-256/woden/internal/project"
+	"github.com/yuqing-256/woden/internal/validate"
 )
 
 // Sync reconciles the vendor trees, woden.lock and ols.json with woden.toml.

@@ -4,7 +4,7 @@ import (
 	"errors"
 	"testing"
 
-	"woden/internal/validate"
+	"github.com/yuqing-256/woden/internal/validate"
 )
 
 func checkTable(t *testing.T, name string, fn func(string) error, valid, invalid []string) {

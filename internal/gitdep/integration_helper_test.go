@@ -16,9 +16,9 @@ import (
 	"testing"
 	"time"
 
-	"woden/internal/proc"
-	"woden/internal/project"
-	"woden/internal/testutil"
+	"github.com/yuqing-256/woden/internal/proc"
+	"github.com/yuqing-256/woden/internal/project"
+	"github.com/yuqing-256/woden/internal/testutil"
 )
 
 // The integration tests use real Git against a repository created with

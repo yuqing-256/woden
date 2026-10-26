@@ -15,9 +15,9 @@ import (
 	"path/filepath"
 	"strings"
 
-	"woden/internal/errs"
-	"woden/internal/fsx"
-	"woden/internal/validate"
+	"github.com/yuqing-256/woden/internal/errs"
+	"github.com/yuqing-256/woden/internal/fsx"
+	"github.com/yuqing-256/woden/internal/validate"
 )
 
 // writeNew creates a file that must not exist yet. It is a variable so tests

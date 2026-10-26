@@ -4,17 +4,28 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"runtime/debug"
 
 	"github.com/spf13/cobra"
 
-	"woden/internal/errs"
-	"woden/internal/project"
+	"github.com/yuqing-256/woden/internal/errs"
+	"github.com/yuqing-256/woden/internal/project"
 )
 
 // version is injected at build time with
 //
-//	go build -ldflags "-X woden/cmd.version=v1.2.3"
+//	go build -ldflags "-X github.com/yuqing-256/woden/cmd.version=v1.2.3"
 var version = "dev"
+
+func versionFromBuildInfo(linkerVersion string, info *debug.BuildInfo) string {
+	if linkerVersion != "dev" {
+		return linkerVersion
+	}
+	if info != nil && info.Main.Version != "" && info.Main.Version != "(devel)" {
+		return info.Main.Version
+	}
+	return linkerVersion
+}
 
 // Command group identifiers. Every command belongs to exactly one group so
 // "woden help" can present the commands the way README.md documents them.
@@ -69,6 +80,9 @@ and runs programs, and manages Git dependencies declared in woden.toml.`,
 }
 
 func init() {
+	if info, ok := debug.ReadBuildInfo(); ok {
+		rootCmd.Version = versionFromBuildInfo(version, info)
+	}
 	rootCmd.AddGroup(
 		&cobra.Group{ID: GroupProject, Title: "Project commands:"},
 		&cobra.Group{ID: GroupBuild, Title: "Build commands:"},

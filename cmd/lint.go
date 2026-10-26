@@ -3,8 +3,8 @@ package cmd
 import (
 	"github.com/spf13/cobra"
 
-	"woden/internal/odin"
-	"woden/internal/project"
+	"github.com/yuqing-256/woden/internal/odin"
+	"github.com/yuqing-256/woden/internal/project"
 )
 
 // lintCmd checks src/ with "odin check -vet".

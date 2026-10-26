@@ -7,8 +7,8 @@ import (
 	"strings"
 	"testing"
 
-	"woden/internal/config"
-	"woden/internal/testutil"
+	"github.com/yuqing-256/woden/internal/config"
+	"github.com/yuqing-256/woden/internal/testutil"
 )
 
 func readFixture(t *testing.T, rel string) []byte {

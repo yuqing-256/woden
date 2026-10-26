@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"os"
 
-	"woden/internal/config"
-	"woden/internal/errs"
-	"woden/internal/lock"
-	"woden/internal/validate"
+	"github.com/yuqing-256/woden/internal/config"
+	"github.com/yuqing-256/woden/internal/errs"
+	"github.com/yuqing-256/woden/internal/lock"
+	"github.com/yuqing-256/woden/internal/validate"
 )
 
 // Update advances dependencies that track a branch, a tag or the remote default

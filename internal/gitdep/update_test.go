@@ -4,9 +4,9 @@ import (
 	"context"
 	"testing"
 
-	"woden/internal/config"
-	"woden/internal/errs"
-	"woden/internal/lock"
+	"github.com/yuqing-256/woden/internal/config"
+	"github.com/yuqing-256/woden/internal/errs"
+	"github.com/yuqing-256/woden/internal/lock"
 )
 
 // TestUpdateAdvancesBranch pins the happy path: the remote branch moved, so the

@@ -7,9 +7,9 @@ import (
 	"strings"
 	"testing"
 
-	"woden/internal/errs"
-	"woden/internal/ols"
-	"woden/internal/testutil"
+	"github.com/yuqing-256/woden/internal/errs"
+	"github.com/yuqing-256/woden/internal/ols"
+	"github.com/yuqing-256/woden/internal/testutil"
 )
 
 // fixture returns the bytes of a file in testdata/ols/.

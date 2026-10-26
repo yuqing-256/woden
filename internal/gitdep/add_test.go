@@ -7,9 +7,9 @@ import (
 	"strings"
 	"testing"
 
-	"woden/internal/config"
-	"woden/internal/errs"
-	"woden/internal/tomlutil"
+	"github.com/yuqing-256/woden/internal/config"
+	"github.com/yuqing-256/woden/internal/errs"
+	"github.com/yuqing-256/woden/internal/tomlutil"
 )
 
 // TestAddDefaultBranch pins the complete "woden add" flow for a dependency that

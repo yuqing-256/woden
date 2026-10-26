@@ -9,9 +9,9 @@ import (
 	"path/filepath"
 	"strings"
 
-	"woden/internal/errs"
-	"woden/internal/fsx"
-	"woden/internal/project"
+	"github.com/yuqing-256/woden/internal/errs"
+	"github.com/yuqing-256/woden/internal/fsx"
+	"github.com/yuqing-256/woden/internal/project"
 )
 
 // vendorPath returns the absolute worktree path of dependency name.

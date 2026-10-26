@@ -6,10 +6,10 @@ import (
 	"path/filepath"
 	"testing"
 
-	"woden/internal/config"
-	"woden/internal/errs"
-	"woden/internal/lock"
-	"woden/internal/project"
+	"github.com/yuqing-256/woden/internal/config"
+	"github.com/yuqing-256/woden/internal/errs"
+	"github.com/yuqing-256/woden/internal/lock"
+	"github.com/yuqing-256/woden/internal/project"
 )
 
 // TestSyncRestoresMissingVendorFromLock pins that sync restores a deleted

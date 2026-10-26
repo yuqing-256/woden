@@ -9,7 +9,7 @@ import (
 	"strings"
 	"testing"
 
-	"woden/internal/testutil"
+	"github.com/yuqing-256/woden/internal/testutil"
 )
 
 // TestNewCreatesGoldenProject checks that woden new produces exactly the

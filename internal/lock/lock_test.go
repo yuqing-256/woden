@@ -7,8 +7,8 @@ import (
 	"strings"
 	"testing"
 
-	"woden/internal/lock"
-	"woden/internal/testutil"
+	"github.com/yuqing-256/woden/internal/lock"
+	"github.com/yuqing-256/woden/internal/testutil"
 )
 
 func readLockFixture(t *testing.T, name string) []byte {

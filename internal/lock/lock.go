@@ -17,10 +17,10 @@ import (
 
 	"github.com/BurntSushi/toml"
 
-	"woden/internal/errs"
-	"woden/internal/fsx"
-	"woden/internal/tomlutil"
-	"woden/internal/validate"
+	"github.com/yuqing-256/woden/internal/errs"
+	"github.com/yuqing-256/woden/internal/fsx"
+	"github.com/yuqing-256/woden/internal/tomlutil"
+	"github.com/yuqing-256/woden/internal/validate"
 )
 
 // FileName is the name of the lock file.

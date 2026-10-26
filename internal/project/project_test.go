@@ -7,9 +7,9 @@ import (
 	"strings"
 	"testing"
 
-	"woden/internal/errs"
-	"woden/internal/project"
-	"woden/internal/testutil"
+	"github.com/yuqing-256/woden/internal/errs"
+	"github.com/yuqing-256/woden/internal/project"
+	"github.com/yuqing-256/woden/internal/testutil"
 )
 
 func newProject(t *testing.T, fixture string) string {

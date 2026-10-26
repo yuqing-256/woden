@@ -29,7 +29,7 @@ const (
 	EnvExit = "WODEN_FAKE_TOOL_EXIT"
 
 	// importPath is the import path of the fake tool program.
-	importPath = "woden/internal/testutil/faketool/cmd/faketool"
+	importPath = "github.com/yuqing-256/woden/internal/testutil/faketool/cmd/faketool"
 )
 
 // Record is one logged fake tool invocation.

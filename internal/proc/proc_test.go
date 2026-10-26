@@ -12,7 +12,7 @@ import (
 	"testing"
 	"time"
 
-	"woden/internal/proc"
+	"github.com/yuqing-256/woden/internal/proc"
 )
 
 func TestLook(t *testing.T) {

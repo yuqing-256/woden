@@ -7,7 +7,7 @@ package odin
 import (
 	"runtime"
 
-	"woden/internal/config"
+	"github.com/yuqing-256/woden/internal/config"
 )
 
 // Directories passed to Odin, relative to the project root.

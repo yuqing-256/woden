@@ -3,8 +3,8 @@ package cmd
 import (
 	"github.com/spf13/cobra"
 
-	"woden/internal/errs"
-	"woden/internal/gitdep"
+	"github.com/yuqing-256/woden/internal/errs"
+	"github.com/yuqing-256/woden/internal/gitdep"
 )
 
 // addCmd declares a new Git dependency and vendors it.

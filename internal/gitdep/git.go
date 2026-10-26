@@ -6,11 +6,11 @@ import (
 	"fmt"
 	"strings"
 
-	"woden/internal/config"
-	"woden/internal/errs"
-	"woden/internal/lock"
-	"woden/internal/proc"
-	"woden/internal/validate"
+	"github.com/yuqing-256/woden/internal/config"
+	"github.com/yuqing-256/woden/internal/errs"
+	"github.com/yuqing-256/woden/internal/lock"
+	"github.com/yuqing-256/woden/internal/proc"
+	"github.com/yuqing-256/woden/internal/validate"
 )
 
 // gitProgram is the only program gitdep runs.

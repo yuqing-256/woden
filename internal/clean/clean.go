@@ -15,8 +15,8 @@ import (
 	"os"
 	"path/filepath"
 
-	"woden/internal/errs"
-	"woden/internal/fsx"
+	"github.com/yuqing-256/woden/internal/errs"
+	"github.com/yuqing-256/woden/internal/fsx"
 )
 
 // TargetDir is the project directory removed by clean.

@@ -8,12 +8,12 @@ import (
 	"strings"
 	"testing"
 
-	"woden/internal/config"
-	"woden/internal/lock"
-	"woden/internal/proc"
-	"woden/internal/project"
-	"woden/internal/testutil"
-	"woden/internal/tomlutil"
+	"github.com/yuqing-256/woden/internal/config"
+	"github.com/yuqing-256/woden/internal/lock"
+	"github.com/yuqing-256/woden/internal/proc"
+	"github.com/yuqing-256/woden/internal/project"
+	"github.com/yuqing-256/woden/internal/testutil"
+	"github.com/yuqing-256/woden/internal/tomlutil"
 )
 
 // Test fixtures for the unit tests. The commits are arbitrary full commit IDs:

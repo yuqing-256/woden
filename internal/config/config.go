@@ -17,8 +17,8 @@ import (
 
 	"github.com/BurntSushi/toml"
 
-	"woden/internal/errs"
-	"woden/internal/validate"
+	"github.com/yuqing-256/woden/internal/errs"
+	"github.com/yuqing-256/woden/internal/validate"
 )
 
 // Supported profile names.

@@ -6,7 +6,7 @@ import (
 	"regexp"
 	"strings"
 
-	"woden/internal/errs"
+	"github.com/yuqing-256/woden/internal/errs"
 )
 
 // span is a half-open byte range [start,end) inside an ols.json file.

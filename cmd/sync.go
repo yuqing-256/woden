@@ -6,10 +6,10 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"woden/internal/errs"
-	"woden/internal/gitdep"
-	"woden/internal/proc"
-	"woden/internal/project"
+	"github.com/yuqing-256/woden/internal/errs"
+	"github.com/yuqing-256/woden/internal/gitdep"
+	"github.com/yuqing-256/woden/internal/proc"
+	"github.com/yuqing-256/woden/internal/project"
 )
 
 // syncCmd restores the vendor worktrees from woden.lock.

@@ -11,10 +11,10 @@ import (
 	"strings"
 	"testing"
 
-	"woden/internal/clean"
-	"woden/internal/errs"
-	"woden/internal/fsx"
-	"woden/internal/testutil"
+	"github.com/yuqing-256/woden/internal/clean"
+	"github.com/yuqing-256/woden/internal/errs"
+	"github.com/yuqing-256/woden/internal/fsx"
+	"github.com/yuqing-256/woden/internal/testutil"
 )
 
 // testTree creates a project with a populated target/ directory and an outside

@@ -5,7 +5,7 @@ package validate_test
 import (
 	"testing"
 
-	"woden/internal/validate"
+	"github.com/yuqing-256/woden/internal/validate"
 )
 
 func TestGitURLAcceptsFileURLWithTestingTag(t *testing.T) {

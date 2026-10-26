@@ -11,10 +11,10 @@ import (
 	"runtime"
 	"slices"
 
-	"woden/internal/config"
-	"woden/internal/errs"
-	"woden/internal/fsx"
-	"woden/internal/lock"
+	"github.com/yuqing-256/woden/internal/config"
+	"github.com/yuqing-256/woden/internal/errs"
+	"github.com/yuqing-256/woden/internal/fsx"
+	"github.com/yuqing-256/woden/internal/lock"
 )
 
 // Names of the well-known project entries.

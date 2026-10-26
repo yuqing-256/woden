@@ -3,7 +3,7 @@ package cmd
 import (
 	"github.com/spf13/cobra"
 
-	"woden/internal/scaffold"
+	"github.com/yuqing-256/woden/internal/scaffold"
 )
 
 // newCmd creates a new project.

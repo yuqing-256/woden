@@ -17,8 +17,8 @@ import (
 	"sort"
 	"strings"
 
-	"woden/internal/errs"
-	"woden/internal/fsx"
+	"github.com/yuqing-256/woden/internal/errs"
+	"github.com/yuqing-256/woden/internal/fsx"
 )
 
 // FileName is the OLS configuration file managed by Woden.

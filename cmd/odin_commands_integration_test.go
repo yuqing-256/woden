@@ -10,8 +10,8 @@ import (
 	"strings"
 	"testing"
 
-	"woden/internal/testutil"
-	"woden/internal/testutil/faketool"
+	"github.com/yuqing-256/woden/internal/testutil"
+	"github.com/yuqing-256/woden/internal/testutil/faketool"
 )
 
 // The tests in this file run a freshly built woden binary against fake odin and

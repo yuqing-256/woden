@@ -6,10 +6,10 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"woden/internal/config"
-	"woden/internal/errs"
-	"woden/internal/odin"
-	"woden/internal/project"
+	"github.com/yuqing-256/woden/internal/config"
+	"github.com/yuqing-256/woden/internal/errs"
+	"github.com/yuqing-256/woden/internal/odin"
+	"github.com/yuqing-256/woden/internal/project"
 )
 
 // runCmd builds and runs the program with "odin run".

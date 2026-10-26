@@ -8,8 +8,8 @@ import (
 	"os/signal"
 	"syscall"
 
-	"woden/cmd"
-	"woden/internal/errs"
+	"github.com/yuqing-256/woden/cmd"
+	"github.com/yuqing-256/woden/internal/errs"
 )
 
 func main() {

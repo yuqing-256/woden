@@ -10,8 +10,8 @@ import (
 	"strings"
 	"testing"
 
-	"woden/internal/errs"
-	"woden/internal/testutil"
+	"github.com/yuqing-256/woden/internal/errs"
+	"github.com/yuqing-256/woden/internal/testutil"
 )
 
 // projectFiles is the sorted list of files a complete project contains,

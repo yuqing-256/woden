@@ -3,9 +3,9 @@ package cmd
 import (
 	"github.com/spf13/cobra"
 
-	"woden/internal/errs"
-	"woden/internal/odin"
-	"woden/internal/project"
+	"github.com/yuqing-256/woden/internal/errs"
+	"github.com/yuqing-256/woden/internal/odin"
+	"github.com/yuqing-256/woden/internal/project"
 )
 
 // fmtCmd formats src/ and tests/ with odinfmt.

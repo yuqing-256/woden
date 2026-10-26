@@ -4,10 +4,10 @@ import (
 	"context"
 	"testing"
 
-	"woden/internal/config"
-	"woden/internal/errs"
-	"woden/internal/lock"
-	"woden/internal/ols"
+	"github.com/yuqing-256/woden/internal/config"
+	"github.com/yuqing-256/woden/internal/errs"
+	"github.com/yuqing-256/woden/internal/lock"
+	"github.com/yuqing-256/woden/internal/ols"
 )
 
 // vendoredDependency declares dep with the deps collection, pins commit in

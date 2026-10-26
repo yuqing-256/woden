@@ -13,10 +13,10 @@ import (
 	"strings"
 	"testing"
 
-	"woden/internal/config"
-	"woden/internal/fsx"
-	"woden/internal/lock"
-	"woden/internal/project"
+	"github.com/yuqing-256/woden/internal/config"
+	"github.com/yuqing-256/woden/internal/fsx"
+	"github.com/yuqing-256/woden/internal/lock"
+	"github.com/yuqing-256/woden/internal/project"
 )
 
 // integration tests exercise the real Git CLI. They are build-tagged with

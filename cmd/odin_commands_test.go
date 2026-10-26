@@ -10,8 +10,8 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"woden/internal/project"
-	"woden/internal/testutil"
+	"github.com/yuqing-256/woden/internal/project"
+	"github.com/yuqing-256/woden/internal/testutil"
 )
 
 // odinTestWriteProject writes content as woden.toml in a fresh temporary

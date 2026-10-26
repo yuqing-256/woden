@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"woden/internal/proc"
+	"github.com/yuqing-256/woden/internal/proc"
 )
 
 // fakeCall records one Git invocation.

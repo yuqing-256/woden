@@ -6,8 +6,8 @@ import (
 	"runtime"
 	"testing"
 
-	"woden/internal/config"
-	"woden/internal/odin"
+	"github.com/yuqing-256/woden/internal/config"
+	"github.com/yuqing-256/woden/internal/odin"
 )
 
 func profiles(t *testing.T) (config.Profile, config.Profile) {

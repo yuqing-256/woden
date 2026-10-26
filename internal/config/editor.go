@@ -4,10 +4,10 @@ import (
 	"os"
 	"strings"
 
-	"woden/internal/errs"
-	"woden/internal/fsx"
-	"woden/internal/tomlutil"
-	"woden/internal/validate"
+	"github.com/yuqing-256/woden/internal/errs"
+	"github.com/yuqing-256/woden/internal/fsx"
+	"github.com/yuqing-256/woden/internal/tomlutil"
+	"github.com/yuqing-256/woden/internal/validate"
 )
 
 // Editor applies minimal textual edits to a woden.toml file.

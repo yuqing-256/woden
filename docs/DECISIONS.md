@@ -139,8 +139,9 @@ there is no passthrough of arbitrary Odin or odinfmt flags (README line 199).
 ### D-015 Help and version
 
 `woden help`, `-h`/`--help` and `completion` are Cobra defaults. `woden version`
-prints the version injected with `-ldflags "-X main.version=..."`; an empty
-value prints `dev`. Help text is English.
+uses the installed module version from `debug.ReadBuildInfo` when available; a
+linker override such as `-ldflags "-X github.com/yuqing-256/woden/cmd.version=v1.2.3"`
+takes precedence. Local development builds print `dev`. Help text is English.
 
 ## 3. Configuration (`woden.toml`)
 
@@ -618,7 +619,8 @@ downloads only the toolchain and the Go modules at setup time.
 ### D-094 No release/goreleaser configuration
 
 The README and BRIEF require no release artifacts, checksums or packaging:
-versioning is the `-ldflags` injection described in D-015. A `.goreleaser.yml`
+versioning uses Go module build information, with optional `-ldflags` override
+as described in D-015. A `.goreleaser.yml`
 is deliberately not added, because inventing release targets would be
 requirements not present in the sole requirements source. It can be added later
 without changing behaviour.
