@@ -4,43 +4,102 @@ Copyright © 2026 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
+	"context"
+	"fmt"
 	"os"
 
 	"github.com/spf13/cobra"
+
+	"woden/internal/errs"
+	"woden/internal/project"
 )
 
-// rootCmd represents the base command when called without any subcommands
+// version is injected at build time with
+//
+//	go build -ldflags "-X woden/cmd.version=v1.2.3"
+var version = "dev"
+
+// Command group identifiers. Every command belongs to exactly one group so
+// "woden help" can present the commands the way README.md documents them.
+const (
+	GroupProject    = "project"
+	GroupBuild      = "build"
+	GroupDependency = "dependency"
+)
+
+// NoProjectAnnotation marks commands that do not require a woden.toml (new and
+// init, which create one).
+const NoProjectAnnotation = "woden.io/no-project"
+
+// rootCmd represents the base command when called without any subcommands.
 var rootCmd = &cobra.Command{
 	Use:   "woden",
-	Short: "A brief description of your application",
-	Long: `A longer description that spans multiple lines and likely contains
-examples and usage of using your application. For example:
+	Short: "A project manager for the Odin programming language",
+	Long: `Woden is a project manager for the Odin programming language.
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
-	// Uncomment the following line if your bare application
-	// has an action associated with it:
-	// Run: func(cmd *cobra.Command, args []string) { },
-}
-
-// Execute adds all child commands to the root command and sets flags appropriately.
-// This is called by main.main(). It only needs to happen once to the rootCmd.
-func Execute() {
-	err := rootCmd.Execute()
-	if err != nil {
-		os.Exit(1)
-	}
+It creates new projects, formats and checks source code, runs tests, builds
+and runs programs, and manages Git dependencies declared in woden.toml.`,
+	Example: `  woden new my-game
+  woden check
+  woden build --release
+  woden run -- --verbose`,
+	Version:       version,
+	SilenceUsage:  true,
+	SilenceErrors: true,
+	PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
+		if cmd.Annotations[NoProjectAnnotation] == "true" {
+			return nil
+		}
+		// Cobra's own commands never need a project.
+		switch cmd.Name() {
+		case "help", "completion", "version":
+			return nil
+		}
+		cwd, err := os.Getwd()
+		if err != nil {
+			return errs.WrapUser(err, "cannot determine the current directory")
+		}
+		p, err := project.Load(cwd)
+		if err != nil {
+			return err
+		}
+		cmd.SetContext(project.WithContext(cmd.Context(), p))
+		for _, warning := range p.Warnings {
+			fmt.Fprintf(cmd.ErrOrStderr(), "warning: %s\n", warning)
+		}
+		return nil
+	},
 }
 
 func init() {
-	// Here you will define your flags and configuration settings.
-	// Cobra supports persistent flags, which, if defined here,
-	// will be global for your application.
+	rootCmd.AddGroup(
+		&cobra.Group{ID: GroupProject, Title: "Project commands:"},
+		&cobra.Group{ID: GroupBuild, Title: "Build commands:"},
+		&cobra.Group{ID: GroupDependency, Title: "Dependency commands:"},
+	)
+	rootCmd.SetFlagErrorFunc(func(cmd *cobra.Command, err error) error {
+		return errs.WrapUser(err, "invalid arguments")
+	})
+}
 
-	// rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.woden.yaml)")
+// Execute runs the CLI with the given context. The context is cancelled on
+// Ctrl+C by main, so long-running child processes are killed as well.
+func Execute(ctx context.Context) error {
+	return rootCmd.ExecuteContext(ctx)
+}
 
-	// Cobra also supports local flags, which will only run
-	// when this action is called directly.
-	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+// projectFromCommand returns the project loaded by the root command's
+// PersistentPreRunE.
+func projectFromCommand(cmd *cobra.Command) (*project.Project, error) {
+	p, ok := project.FromContext(cmd.Context())
+	if !ok {
+		return nil, errs.Userf("internal error: no project in command context")
+	}
+	return p, nil
+}
+
+// childExitError reports a non-zero exit code of an external tool as a Woden
+// failure.
+func childExitError(tool string, code int) error {
+	return errs.Userf("%s exited with code %d", tool, code)
 }
