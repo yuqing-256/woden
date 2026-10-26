@@ -1,40 +1,50 @@
 /*
 Copyright © 2026 NAME HERE <EMAIL ADDRESS>
-
 */
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/spf13/cobra"
+
+	"woden/internal/odin"
+	"woden/internal/project"
 )
 
-// lintCmd represents the lint command
+// lintCmd checks src/ with "odin check -vet".
 var lintCmd = &cobra.Command{
 	Use:   "lint",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
+	Short: "Check src/ with odin check -vet",
+	Long: `Check the Odin sources in src/ with odin check -vet.
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("lint called")
+The -vet flag enables Odin's built-in vet checks. The collections from
+woden.toml are passed to Odin as -collection arguments.`,
+	Example: "  woden lint",
+	Args:    cobra.NoArgs,
+	GroupID: GroupBuild,
+	RunE: func(cmd *cobra.Command, args []string) error {
+		p, err := projectFromCommand(cmd)
+		if err != nil {
+			return err
+		}
+		if err := p.CheckVendor(); err != nil {
+			return err
+		}
+		code, err := runExternalTool(cmd, "odin", p.Root, lintInvocation(p))
+		if err != nil {
+			return err
+		}
+		if code != 0 {
+			return childExitError("odin", code)
+		}
+		return nil
 	},
+}
+
+// lintInvocation returns the "odin check -vet" arguments for p.
+func lintInvocation(p *project.Project) []string {
+	return odin.LintArgs(p.CollectionArgs())
 }
 
 func init() {
 	rootCmd.AddCommand(lintCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// lintCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// lintCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }

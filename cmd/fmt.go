@@ -1,40 +1,60 @@
 /*
 Copyright © 2026 NAME HERE <EMAIL ADDRESS>
-
 */
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/spf13/cobra"
+
+	"woden/internal/errs"
+	"woden/internal/odin"
+	"woden/internal/project"
 )
 
-// fmtCmd represents the fmt command
+// fmtCmd formats src/ and tests/ with odinfmt.
 var fmtCmd = &cobra.Command{
 	Use:   "fmt",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
+	Short: "Format src/ and tests/ with odinfmt",
+	Long: `Format the Odin sources in src/ and tests/ with odinfmt.
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("fmt called")
+The src/ directory is formatted before tests/. The libs/ and vendor/ directories
+are never formatted.`,
+	Example: "  woden fmt",
+	Args:    cobra.NoArgs,
+	GroupID: GroupBuild,
+	RunE: func(cmd *cobra.Command, args []string) error {
+		p, err := projectFromCommand(cmd)
+		if err != nil {
+			return err
+		}
+		dirs, err := formatDirectories(p)
+		if err != nil {
+			return err
+		}
+		for _, dir := range dirs {
+			code, err := runExternalTool(cmd, "odinfmt", p.Root, odin.FmtArgs(dir))
+			if err != nil {
+				return err
+			}
+			if code != 0 {
+				return childExitError("odinfmt", code)
+			}
+		}
+		return nil
 	},
+}
+
+// formatDirectories returns the directories "woden fmt" formats, in order:
+// src/ and then tests/, skipping the ones that do not exist. Nothing to format
+// is a user error.
+func formatDirectories(p *project.Project) ([]string, error) {
+	dirs := p.SourceAndTestDirs()
+	if len(dirs) == 0 {
+		return nil, errs.Userf("neither %s/ nor %s/ exists in %s; nothing to format", project.SourceDir, project.TestsDir, p.Root)
+	}
+	return dirs, nil
 }
 
 func init() {
 	rootCmd.AddCommand(fmtCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// fmtCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// fmtCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
