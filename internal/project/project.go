@@ -161,18 +161,30 @@ func (p *Project) Profile(name string) (config.Profile, error) {
 	return p.Config.Profile(name)
 }
 
-// CheckVendor returns a user error when dependencies are exposed through a
-// collection whose directory does not exist: the user has to run "woden sync".
+// CheckVendor returns a user error when the project needs its dependencies but
+// their vendor directory does not exist: the user has to run "woden sync".
+//
+// Dependencies are needed when woden.toml declares any [dependencies] entries or
+// maps the "deps" collection. In both cases the vendor directory (the mapped
+// path, or vendor/ when no mapping exists) has to be present before a command can
+// compile or run the project.
 func (p *Project) CheckVendor() error {
-	depsPath, ok := p.Config.DepsCollection()
-	if !ok {
+	depsPath, mapped := p.Config.DepsCollection()
+	if !mapped && !p.HasDependencies() {
 		return nil
 	}
+	if !mapped {
+		depsPath = VendorDir
+	}
+
 	target := p.Abs(filepath.FromSlash(depsPath))
 	info, err := os.Stat(target)
 	if err != nil {
 		if errors.Is(err, fs.ErrNotExist) {
-			return errs.Userf("the %q collection is configured but %s does not exist; run `woden sync` to restore the dependencies", DepsCollection, depsPath)
+			if mapped {
+				return errs.Userf("the %q collection is configured but %s does not exist; run `woden sync` to restore the dependencies", DepsCollection, depsPath)
+			}
+			return errs.Userf("dependencies are declared in woden.toml but %s does not exist; run `woden sync` to restore them", depsPath)
 		}
 		return errs.WrapUser(err, "cannot inspect %s", depsPath)
 	}

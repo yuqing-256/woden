@@ -122,6 +122,37 @@ func TestLoadFullProjectWarningsAndVendor(t *testing.T) {
 	}
 }
 
+func TestCheckVendorForDeclaredDependencies(t *testing.T) {
+	root := t.TempDir()
+	manifest := `[package]
+name = "my-game"
+version = "0.1.0"
+
+[dependencies.deplib]
+git = "https://example.com/deplib.git"
+`
+	if err := os.WriteFile(filepath.Join(root, "woden.toml"), []byte(manifest), 0o644); err != nil {
+		t.Fatalf("write woden.toml: %v", err)
+	}
+	p, err := project.Load(root)
+	if err != nil {
+		t.Fatalf("Load: %v", err)
+	}
+	err = p.CheckVendor()
+	if err == nil {
+		t.Fatal("CheckVendor should fail when a dependency is declared and vendor/ is missing")
+	}
+	if !errs.IsUser(err) || !strings.Contains(err.Error(), "woden sync") {
+		t.Fatalf("CheckVendor error = %v, want a user error mentioning woden sync", err)
+	}
+	if err := os.MkdirAll(filepath.Join(root, "vendor"), 0o755); err != nil {
+		t.Fatalf("mkdir vendor: %v", err)
+	}
+	if err := p.CheckVendor(); err != nil {
+		t.Fatalf("CheckVendor with vendor/ present = %v, want nil", err)
+	}
+}
+
 func TestLoadInvalidProject(t *testing.T) {
 	root := newProject(t, "bad-syntax.toml")
 	if _, err := project.Load(root); err == nil {
