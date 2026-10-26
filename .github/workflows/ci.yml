@@ -1,0 +1,102 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+# Pinned toolchain for the end-to-end job. The versions match mise.toml
+# (odin dev-2026-10, ols dev-2026-10) and should be bumped together with the
+# fixtures. The vet/race/woden_testing jobs do not need Odin.
+env:
+  ODIN_VERSION: dev-2026-10
+  OLS_VERSION: dev-2026-10
+
+jobs:
+  vet:
+    name: vet (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache: true
+      - run: go vet ./...
+
+  test-race:
+    name: test -race (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache: true
+      - run: go test -race ./...
+
+  test-woden-testing:
+    name: test woden_testing (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache: true
+      - run: go test -tags woden_testing ./...
+
+  e2e:
+    name: e2e (linux, pinned odin/ols)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache: true
+      - name: Install pinned Odin and OLS
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$HOME/toolchain/odin" "$HOME/toolchain/ols"
+          # Official release archives for the versions pinned above. The
+          # patterns select the Linux amd64 archive; adjust only if upstream
+          # renames its assets.
+          gh release download "$ODIN_VERSION" \
+            --repo odin-lang/Odin \
+            --pattern "*linux-amd64*.zip" \
+            --dir "$HOME/toolchain/odin"
+          gh release download "$OLS_VERSION" \
+            --repo DanielGavin/ols \
+            --pattern "*linux-amd64*.zip" \
+            --dir "$HOME/toolchain/ols"
+          (cd "$HOME/toolchain/odin" && unzip -q ./*.zip)
+          (cd "$HOME/toolchain/ols" && unzip -q ./*.zip)
+          ODIN_BIN="$(find "$HOME/toolchain/odin" -type f -name odin -perm -u+x | head -n1)"
+          ODINFMT_BIN="$(find "$HOME/toolchain/ols" -type f -name odinfmt -perm -u+x | head -n1)"
+          test -n "$ODIN_BIN"
+          test -n "$ODINFMT_BIN"
+          echo "odin binary: $ODIN_BIN"
+          "$ODIN_BIN" version
+          echo "$(dirname "$ODIN_BIN")" >> "$GITHUB_PATH"
+          echo "$(dirname "$ODINFMT_BIN")" >> "$GITHUB_PATH"
+      - name: go test (e2e, woden_testing)
+        run: go test -tags "e2e woden_testing" ./...
