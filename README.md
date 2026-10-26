@@ -15,6 +15,14 @@ Woden 采用约定优先的设计：项目目录固定，常用操作使用默�
 
 Odin、Git 和 `odinfmt` 通过系统 `PATH` 查找。
 
+## 安装
+
+```sh
+go install github.com/yuqing-256/woden@latest
+```
+
+安装后的二进制位于 `%GOBIN%`，或默认的 `%USERPROFILE%\go\bin`（Windows）；Linux/macOS 默认位于 `$HOME/go/bin`。请将对应目录加入 `PATH`。所需 Go 版本见 `go.mod`。
+
 ## 快速开始
 
 创建新项目：
