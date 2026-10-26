@@ -1,40 +1,38 @@
-/*
-Copyright © 2026 NAME HERE <EMAIL ADDRESS>
-
-*/
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/spf13/cobra"
+
+	"woden/internal/scaffold"
 )
 
-// initCmd represents the init command
+// initCmd initializes a project in an existing directory.
 var initCmd = &cobra.Command{
-	Use:   "init",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
+	Use:   "init [path]",
+	Short: "Initialize a project in an existing directory",
+	Long: `Initialize the directory at [path] as a Woden project.
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("init called")
+When [path] is omitted, the current directory is used. The directory must
+already exist.
+
+Existing files are never overwritten: only missing files are created, and an
+existing .gitignore is completed with the entries it does not have yet.`,
+	Example: `  woden init
+  woden init path/to/my-game`,
+	GroupID: GroupProject,
+	Annotations: map[string]string{
+		NoProjectAnnotation: "true",
+	},
+	Args:              cobra.MaximumNArgs(1),
+	ValidArgsFunction: completeDirectoryArgument,
+	RunE: func(cmd *cobra.Command, args []string) error {
+		if len(args) == 0 {
+			return scaffold.Init("")
+		}
+		return scaffold.Init(args[0])
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(initCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// initCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// initCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
