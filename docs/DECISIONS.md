@@ -6,7 +6,7 @@ requirements source; `docs/BRIEF.md` is implementation guidance and
 `docs/FIXTURES.md` describes the test resources. Fixture drift discovered during
 the M0 audit is tracked with stable IDs (`AUD-###`) in
 `docs/FIXTURES_AUDIT.md`; that document also contains the raw evidence for the
-real-Odin verification summarised in §12.
+real-Odin verification summarised in §13.
 
 The document uses the following conventions:
 
@@ -14,9 +14,9 @@ The document uses the following conventions:
   Go 1.27.x, Odin `dev-2026-10` (`dev-2026-10-nightly:84bc3fc`) and OLS/odinfmt
   `dev-2026-10`.
 - A decision is normative for the implementation and the tests. Decisions that
-  are still waiting for a real-world observation are listed in §13 and are
+  are still waiting for a real-world observation are listed in §14 and are
   isolated behind interfaces so that they can be adjusted with a contract test.
-- Changes to a decision must be appended to the change log in §14.
+- Changes to a decision must be appended to the change log in §15.
 
 ## 1. Sources of truth and fixture drift
 
@@ -35,7 +35,7 @@ fixtures that have a full spec in `docs/FIXTURES.md` were created in M0
 (`testdata/toml/valid-minimal.toml`, `testdata/toml/valid-full.toml`,
 `testdata/lock/valid.lock`; AUD-001..AUD-003). Remaining drift is handled by
 branching or skipping the affected assertion and citing the AUD ID in the test,
-so that a later fixture fix is a visible test change (BRIEF §1.1). §11 is the
+so that a later fixture fix is a visible test change (BRIEF §1.1). §12 is the
 complete mapping.
 
 ### D-003 Golden files beat the README fences (AUD-010)
@@ -80,7 +80,7 @@ fix this. Consequences:
   never part of the repository or of a generated project.
 - On Linux/macOS odinfmt's default is expected to be LF (upstream source
   default), so the workaround is not expected to be necessary there; the CI e2e
-  job on Ubuntu confirms it (still listed as unverified in §13 until CI runs).
+  job on Ubuntu confirms it (still listed as unverified in §14 until CI runs).
 
 ## 2. CLI shape, output and exit codes
 
@@ -193,7 +193,7 @@ Only `dev` and `release` exist. Defaults are the README table:
 table may override only `debug` and `opt-level`; partial overrides keep the
 other default. Any other profile name is an error. `debug` maps to `-debug`,
 `opt-level` maps to `-o:` with the allowed values `none`, `minimal`, `size`,
-`speed`, `aggressive` (verified against the real compiler's error text, §12).
+`speed`, `aggressive` (verified against the real compiler's error text, §13).
 `build` uses `dev`; `build --release` uses `release`; `run` and `test` always use
 `dev`; there is no `run --release`.
 
@@ -362,6 +362,8 @@ README line 260: Woden never generates, ships or edits `odinfmt.json`; formattin
 style is the user's/OLS's configuration. The e2e workaround in D-005 lives only
 in test temp copies.
 
+## 7. `clean`
+
 ### D-053 `clean`
 
 `clean` deletes the project's `target/` directory and nothing else (README line
@@ -377,7 +379,7 @@ A missing `target/` is success with no output. `target/` itself is removed after
 its entries; if `target/` is itself a link, only the link is removed. Paths are
 printed with forward slashes on every platform.
 
-## 7. Lock file (`woden.lock`)
+## 8. Lock file (`woden.lock`)
 
 ### D-060 Format
 
@@ -426,7 +428,7 @@ never requires the vendor tree. `woden add` deliberately has no such preflight �
 it creates the vendor tree — and `woden remove` reports a missing or
 unrecognised worktree as an ownership problem instead (D-072).
 
-## 8. Git dependencies
+## 9. Git dependencies
 
 ### D-070 Source validation
 
@@ -491,7 +493,7 @@ lock/manifest mismatch is resolved from the declared reference).
 wrong-commit dependency, and skips dependencies whose working copy is modified
 (report + `101`, others continue). It never advances a commit, never changes
 `woden.toml` dependency sources, and only touches `ols.json` through the OLS
-merge in §9. `sync --check` is strictly read-only: no network, no clone, no
+merge in §10. `sync --check` is strictly read-only: no network, no clone, no
 write; it checks the manifest/lock/vendor consistency and the managed OLS
 mappings, and fails (`101`) on any mismatch.
 
@@ -526,7 +528,7 @@ Network, authentication, missing-ref and clone errors are user errors (`101`)
 with the Git message included. Offline recovery is `sync` from the lock when
 `vendor/` is present, or a Git fetch when it must be restored.
 
-## 9. OLS (`ols.json`)
+## 10. OLS (`ols.json`)
 
 ### D-080 Merge semantics
 
@@ -566,7 +568,7 @@ tab-indented files cannot be exercised because `testdata/ols/tabs.json` is a
 byte copy of `base.json` (AUD-013); the affected test branches/skips on that
 fixture and cites AUD-013 until the fixture is regenerated with tabs.
 
-## 10. Tests and CI
+## 11. Tests and CI
 
 ### D-090 Three test layers
 
@@ -651,7 +653,7 @@ dependency logic itself is still exercised locally by the `woden_testing`
 integration tests, which use a loopback `git daemon` as a test-only fallback
 (deps-dev); that fallback is not part of the committed e2e harness.
 
-## 11. Fixture drift and test handling
+## 12. Fixture drift and test handling
 
 The table maps every `AUD` finding to its handling. "resolved" means the fixture
 was created in M0 (and committed); "manual" means the drift remains in the
@@ -674,7 +676,7 @@ repository and no test may silently rely on it.
 | AUD-014 | odinfmt LF→CRLF on Windows | manual; e2e writes `odinfmt.json` LF into temp copy | `fmt` e2e tests use the workaround; Windows-only; Linux confirmed in CI |
 | AUD-015 | `-out:` requires `.exe`; parent dirs not created | implemented decision | build/run/test append `.exe` on Windows and `MkdirAll` target dirs; e2e asserts platform-specific artifacts |
 
-## 12. Verified Odin behaviour (real toolchain, Odin `dev-2026-10`)
+## 13. Verified Odin behaviour (real toolchain, Odin `dev-2026-10`)
 
 The raw commands and outputs are in `docs/FIXTURES_AUDIT.md` §7. Summary of the
 behaviours the design relies on:
@@ -716,7 +718,7 @@ real toolchain with `go test -tags e2e ./e2e -count=1`:
   (`git ls-remote file:///...` fails with `couldn't create signal pipe, Win32
   error 5`), as expected.
 
-## 13. 待实测 / unverified
+## 14. 待实测 / unverified
 
 These items are not verified with the real toolchain yet. They are isolated
 behind the process/OLS interfaces so that they can be corrected with a contract
@@ -742,9 +744,13 @@ test when observed:
    CI (D-096); their local substitution is the `woden_testing` integration suite
    that uses a loopback `git daemon`.
 
-## 14. Change log
+## 15. Change log
 
 - 2026-10-26: initial decisions recorded during the M0-to-M9 implementation
   (auditor, task-7). Full Odin verification evidence lives in
   `docs/FIXTURES_AUDIT.md`; M0 commit `58f719c` added the audit and the three
   missing valid fixtures.
+- 2026-10-26: Lead integration pass aligned sections 5 and 8 with the
+  shipped implementation (add/remove preflight, staging directory naming,
+  add/remove/update write ordering, repair through `sync`), added section 7
+  `clean`, and renumbered the later sections.
