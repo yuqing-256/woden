@@ -134,6 +134,8 @@ func odinTestJoin(prefix []string, extra ...string) []string {
 
 // odinTestSamePath compares two paths, ignoring case on Windows.
 func odinTestSamePath(got, want string) bool {
+	got = odinTestCanonicalPath(got)
+	want = odinTestCanonicalPath(want)
 	if runtime.GOOS == "windows" {
 		return strings.EqualFold(filepath.Clean(got), filepath.Clean(want))
 	}
@@ -144,10 +146,29 @@ func odinTestSamePath(got, want string) bool {
 // Windows. Windows paths are case-insensitive, and the child process may report
 // a differently-cased spelling of the directory it runs in.
 func odinTestSameArg(got, want string) bool {
+	got = odinTestCanonicalTempPath(got)
+	want = odinTestCanonicalTempPath(want)
 	if runtime.GOOS == "windows" {
 		return strings.EqualFold(got, want)
 	}
 	return got == want
+}
+
+// macOS exposes temporary directories through /var and its /private/var
+// symlink. Canonicalize only that known alias inside arguments, preserving
+// exact checks for argument order, flags and all other path components.
+func odinTestCanonicalPath(path string) string {
+	if resolved, err := filepath.EvalSymlinks(path); err == nil {
+		return resolved
+	}
+	return path
+}
+
+func odinTestCanonicalTempPath(arg string) string {
+	if runtime.GOOS != "darwin" {
+		return arg
+	}
+	return strings.ReplaceAll(arg, "/private/var/folders/", "/var/folders/")
 }
 
 // odinTestRequireInvocations asserts that exactly want fake tool invocations

@@ -3,6 +3,10 @@ package proc_test
 import (
 	"bytes"
 	"context"
+	"errors"
+	"os"
+	"os/exec"
+	"path/filepath"
 	"runtime"
 	"strings"
 	"testing"
@@ -56,10 +60,68 @@ func TestExecRunnerSuccessAndNonZeroExit(t *testing.T) {
 }
 
 func TestExecRunnerTimeout(t *testing.T) {
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Millisecond)
+	started := filepath.Join(t.TempDir(), "child-started")
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
-	_, err := (proc.ExecRunner{}).Run(ctx, "go", []string{"version"}, proc.Options{})
+	_, err := (proc.ExecRunner{}).Run(ctx, os.Args[0], []string{"-test.run=TestProcessHelper", "--", "sleep", started}, proc.Options{})
 	if err == nil {
 		t.Fatal("a timed out command should return an error")
+	}
+	if !strings.Contains(err.Error(), "timed out") {
+		t.Fatalf("error = %v, want timeout diagnostic", err)
+	}
+	if _, statErr := os.Stat(started); statErr != nil {
+		t.Fatalf("child did not start before timeout: %v", statErr)
+	}
+}
+
+func TestProcessHelper(t *testing.T) {
+	if len(os.Args) < 4 || os.Args[len(os.Args)-2] != "sleep" {
+		return
+	}
+	if err := os.WriteFile(os.Args[len(os.Args)-1], []byte("started"), 0o600); err != nil {
+		t.Fatalf("mark child process start: %v", err)
+	}
+	time.Sleep(5 * time.Second)
+}
+
+func TestExecRunnerCancellation(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
+	started := filepath.Join(t.TempDir(), "child-started")
+	cmdDone := make(chan error, 1)
+	go func() {
+		_, err := (proc.ExecRunner{}).Run(ctx, os.Args[0], []string{"-test.run=TestProcessHelper", "--", "sleep", started}, proc.Options{})
+		cmdDone <- err
+	}()
+	deadline := time.Now().Add(10 * time.Second)
+	for {
+		if _, err := os.Stat(started); err == nil {
+			break
+		}
+		if time.Now().After(deadline) {
+			cancel()
+			t.Fatal("child process did not start")
+		}
+		time.Sleep(10 * time.Millisecond)
+	}
+	cancel()
+	select {
+	case err := <-cmdDone:
+		if err == nil || !strings.Contains(err.Error(), "interrupted") {
+			t.Fatalf("error = %v, want cancellation diagnostic", err)
+		}
+	case <-time.After(5 * time.Second):
+		t.Fatal("cancelled process did not stop")
+	}
+}
+
+func TestExecRunnerMissingCommand(t *testing.T) {
+	_, err := (proc.ExecRunner{}).Run(context.Background(), "woden-no-such-executable-xyz", nil, proc.Options{})
+	if err == nil {
+		t.Fatal("missing command should return an error")
+	}
+	var exitErr *exec.ExitError
+	if errors.As(err, &exitErr) {
+		t.Fatalf("missing command returned exit error: %v", err)
 	}
 }

@@ -8,12 +8,12 @@ on:
 permissions:
   contents: read
 
-# Pinned toolchain for the end-to-end job. The versions match mise.toml
-# (odin dev-2026-10, ols dev-2026-10) and should be bumped together with the
-# fixtures. The vet/race/woden_testing jobs do not need Odin.
+# Pinned upstream releases for the end-to-end job. Odin publishes Linux
+# archives as tar.gz; OLS' latest monthly release is dev-2026-06 (there is no
+# dev-2026-10 OLS release). The vet/race/woden_testing jobs do not need Odin.
 env:
   ODIN_VERSION: dev-2026-10
-  OLS_VERSION: dev-2026-10
+  OLS_VERSION: dev-2026-06
 
 jobs:
   vet:
@@ -77,23 +77,24 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p "$HOME/toolchain/odin" "$HOME/toolchain/ols"
-          # Official release archives for the versions pinned above. The
-          # patterns select the Linux amd64 archive; adjust only if upstream
-          # renames its assets.
+          # Odin's Linux release is a .tar.gz, not a .zip. OLS publishes the
+          # odinfmt executable in its Linux amd64 release archive.
           gh release download "$ODIN_VERSION" \
             --repo odin-lang/Odin \
-            --pattern "*linux-amd64*.zip" \
+            --pattern "odin-linux-amd64-${ODIN_VERSION}.tar.gz" \
             --dir "$HOME/toolchain/odin"
           gh release download "$OLS_VERSION" \
             --repo DanielGavin/ols \
-            --pattern "*linux-amd64*.zip" \
+            --pattern "ols-x86_64-unknown-linux-gnu.zip" \
             --dir "$HOME/toolchain/ols"
-          (cd "$HOME/toolchain/odin" && unzip -q ./*.zip)
+          (cd "$HOME/toolchain/odin" && tar -xzf ./*.tar.gz)
           (cd "$HOME/toolchain/ols" && unzip -q ./*.zip)
           ODIN_BIN="$(find "$HOME/toolchain/odin" -type f -name odin -perm -u+x | head -n1)"
-          ODINFMT_BIN="$(find "$HOME/toolchain/ols" -type f -name odinfmt -perm -u+x | head -n1)"
+          ODINFMT_BIN="$(find "$HOME/toolchain/ols" -type f -name 'odinfmt-x86_64-unknown-linux-gnu' -perm -u+x | head -n1)"
           test -n "$ODIN_BIN"
           test -n "$ODINFMT_BIN"
+          test -x "$ODIN_BIN"
+          test -x "$ODINFMT_BIN"
           echo "odin binary: $ODIN_BIN"
           "$ODIN_BIN" version
           echo "$(dirname "$ODIN_BIN")" >> "$GITHUB_PATH"
