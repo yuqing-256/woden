@@ -3,5 +3,11 @@ go = "1.27.3"
 odin = { version = "dev-2026-10", bin_path = "." }
 ols = { version = "dev-2026-10", rename_exe = { "ols-*" = "ols", "odinfmt-*" = "odinfmt" } }
 
+[settings]
+go.set_gobin = false
+
 [tasks.build]
 run = "go build -o bin ."
+
+[tasks.install]
+run = "go install ."
